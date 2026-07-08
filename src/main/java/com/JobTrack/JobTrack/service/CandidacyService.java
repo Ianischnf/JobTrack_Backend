@@ -10,6 +10,7 @@ public interface CandidacyService {
 
     public CandidacyResponseDTO saveCandidacy (CandidacyRequestDTO candidacyRequestDTO);
     public List<CandidacyResponseDTO> fetchAllCandidacies();
+    public CandidacyResponseDTO fetchCandidacyById(Long id);
     public CandidacyUpdatedDTO updateCandidacy(CandidacyRequestDTO candidacyRequestDTO,Long id);
     public void DeleteCandidacy(Long id);
 }

@@ -8,6 +8,7 @@ import com.JobTrack.JobTrack.enums.CandidacyStatus;
 import com.JobTrack.JobTrack.repository.CandidacyRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,16 +40,68 @@ public class CandidacyServiceImpl implements CandidacyService{
 
     @Override
     public List<CandidacyResponseDTO> fetchAllCandidacies() {
-        return List.of();
+
+        return candidacyRepository.findAll()
+                .stream()
+                .map(candidacy -> new CandidacyResponseDTO(
+                        candidacy.getId(),
+                        candidacy.getCompany(),
+                        candidacy.getJobTitle(),
+                        candidacy.getDateCandidacy(),
+                        candidacy.getStatus()
+                )).toList();
+       /* List<Candidacy> candidacies = candidacyRepository.findAll();
+        List<CandidacyResponseDTO> dtos = new ArrayList<>();
+
+        for(Candidacy c : candidacies) {
+            dtos.add(new CandidacyResponseDTO(
+                    c.getId(),
+                    c.getCompany(),
+                    c.getJobTitle(),
+                    c.getDateCandidacy(),
+                    c.getStatus()
+            ));
+        }
+        return dtos;
+        */
+    }
+
+    @Override
+    public CandidacyResponseDTO fetchCandidacyById(Long id) {
+        Candidacy candidacy = candidacyRepository.findById(id).orElseThrow(() -> new RuntimeException("Candidature indivuelle introuvable"));
+
+        return new CandidacyResponseDTO(
+                candidacy.getId(),
+                candidacy.getCompany(),
+                candidacy.getJobTitle(),
+                candidacy.getDateCandidacy(),
+                candidacy.getStatus()
+        );
     }
 
     @Override
     public CandidacyUpdatedDTO updateCandidacy(CandidacyRequestDTO candidacyRequestDTO, Long id) {
-        return null;
+        Candidacy candidacy = candidacyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Candidature introuvable"));
+
+       candidacy.setCompany(candidacyRequestDTO.company());
+       candidacy.setJobTitle(candidacyRequestDTO.jobTitle());
+       candidacy.setDateCandidacy(candidacyRequestDTO.dateCandidacy());
+       candidacy.setStatus(candidacyRequestDTO.status());
+
+       Candidacy updated =  candidacyRepository.save(candidacy);
+
+       return new CandidacyUpdatedDTO(
+               updated.getId(),
+               updated.getCompany(),
+               updated.getJobTitle(),
+               updated.getDateCandidacy(),
+               updated.getStatus()
+       );
     }
 
     @Override
     public void DeleteCandidacy(Long id) {
-
+        candidacyRepository.deleteById(id);
     }
 }
