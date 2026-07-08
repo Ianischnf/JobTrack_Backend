@@ -2,6 +2,7 @@ package com.JobTrack.JobTrack.controller;
 
 import com.JobTrack.JobTrack.DTO.CandidacyRequestDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyResponseDTO;
+import com.JobTrack.JobTrack.DTO.CandidacyUpdateDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyUpdatedDTO;
 import com.JobTrack.JobTrack.service.CandidacyService;
 import jakarta.validation.Valid;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/candidacy")
+@RequestMapping("/api/candidacy")
 public class CandidacyController {
 
     private final CandidacyService candidacyService;
@@ -27,16 +28,17 @@ public class CandidacyController {
         return this.candidacyService.fetchAllCandidacies();
     }
 
-    @GetMapping CandidacyResponseDTO fetchCandidacyById(@PathVariable("id") Long id){
+    @GetMapping("/{id}")
+    public CandidacyResponseDTO fetchCandidacyById(@PathVariable("id") Long id){
         return this.candidacyService.fetchCandidacyById(id);
     }
 
-    @PutMapping("{/id}")
-    public CandidacyUpdatedDTO updateCandidacy(@Valid @RequestBody CandidacyRequestDTO candidacyRequestDTO, @PathVariable("id") Long id) {
-        return this.candidacyService.updateCandidacy(candidacyRequestDTO, id);
+    @PutMapping("/{id}")
+    public CandidacyUpdatedDTO updateCandidacy(@Valid @RequestBody CandidacyUpdateDTO candidacyUpdateDTO, @PathVariable("id") Long id) {
+        return this.candidacyService.updateCandidacy(candidacyUpdateDTO, id);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public void deleteCandidacy(@PathVariable("id") Long id){
         this.candidacyService.DeleteCandidacy(id);
     }

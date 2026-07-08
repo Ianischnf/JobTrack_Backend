@@ -4,11 +4,10 @@ import com.JobTrack.JobTrack.enums.CandidacyStatus;
 
 import java.time.LocalDate;
 
-
-public record CandidacyRequestDTO(
+public record CandidacyUpdateDTO(
         String company,
         String jobTitle,
-        LocalDate dateCandidacy
-
+        LocalDate dateCandidacy,
+        CandidacyStatus status
 ) {
 }

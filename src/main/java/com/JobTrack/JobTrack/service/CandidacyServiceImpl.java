@@ -2,20 +2,22 @@ package com.JobTrack.JobTrack.service;
 
 import com.JobTrack.JobTrack.DTO.CandidacyRequestDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyResponseDTO;
+import com.JobTrack.JobTrack.DTO.CandidacyUpdateDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyUpdatedDTO;
 import com.JobTrack.JobTrack.entity.Candidacy;
 import com.JobTrack.JobTrack.enums.CandidacyStatus;
 import com.JobTrack.JobTrack.repository.CandidacyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-
+@Service
 public class CandidacyServiceImpl implements CandidacyService{
 
-    CandidacyRepository candidacyRepository;
+    private final CandidacyRepository candidacyRepository;
 
 
     @Override
@@ -25,7 +27,6 @@ public class CandidacyServiceImpl implements CandidacyService{
         candidacy.setCompany(request.company());
         candidacy.setJobTitle(request.jobTitle());
         candidacy.setDateCandidacy(request.dateCandidacy());
-        candidacy.setStatus(CandidacyStatus.ENVOYEE);
 
         Candidacy saved = candidacyRepository.save(candidacy);
 
@@ -80,14 +81,14 @@ public class CandidacyServiceImpl implements CandidacyService{
     }
 
     @Override
-    public CandidacyUpdatedDTO updateCandidacy(CandidacyRequestDTO candidacyRequestDTO, Long id) {
+    public CandidacyUpdatedDTO updateCandidacy(CandidacyUpdateDTO candidacyUpdateDTO, Long id) {
         Candidacy candidacy = candidacyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Candidature introuvable"));
 
-       candidacy.setCompany(candidacyRequestDTO.company());
-       candidacy.setJobTitle(candidacyRequestDTO.jobTitle());
-       candidacy.setDateCandidacy(candidacyRequestDTO.dateCandidacy());
-       candidacy.setStatus(candidacyRequestDTO.status());
+       candidacy.setCompany(candidacyUpdateDTO.company());
+       candidacy.setJobTitle(candidacyUpdateDTO.jobTitle());
+       candidacy.setDateCandidacy(candidacyUpdateDTO.dateCandidacy());
+       candidacy.setStatus(candidacyUpdateDTO.status());
 
        Candidacy updated =  candidacyRepository.save(candidacy);
 
