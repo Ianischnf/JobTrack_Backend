@@ -1,6 +1,7 @@
 package com.JobTrack.JobTrack.controller;
 
 
+import com.JobTrack.JobTrack.DTO.RegisterRequestDTO;
 import com.JobTrack.JobTrack.configuration.JwtUtils;
 import com.JobTrack.JobTrack.entity.User;
 import com.JobTrack.JobTrack.repository.UserRepository;
@@ -33,12 +34,21 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if(userRepository.findByEmail(user.getEmail()) != null) {
-            return ResponseEntity.badRequest().body("Username is Already in use");
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
+
+
+        if(!request.Password().equals(request.ConfirmPassword())) {
+            return ResponseEntity.badRequest().body("Les mots de passe ne correspondent pas");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(userRepository.findByEmail(request.Email()) != null) {
+            return ResponseEntity.badRequest().body("Email déjà utilisé");
+        }
+
+        User user = new User();
+
+        user.setEmail(request.Email());
+        user.setPassword(passwordEncoder.encode(request.Password()));
 
         return ResponseEntity.ok(userRepository.save(user));
     }

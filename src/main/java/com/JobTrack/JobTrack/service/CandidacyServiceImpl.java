@@ -27,6 +27,7 @@ public class CandidacyServiceImpl implements CandidacyService{
         candidacy.setCompany(request.company());
         candidacy.setJobTitle(request.jobTitle());
         candidacy.setDateCandidacy(request.dateCandidacy());
+        candidacy.setStatus(CandidacyStatus.ENVOYEE);
 
         Candidacy saved = candidacyRepository.save(candidacy);
 
