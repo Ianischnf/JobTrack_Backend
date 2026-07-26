@@ -36,38 +36,65 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
 
+        System.out.println("register appeler");
 
-        if(!request.Password().equals(request.ConfirmPassword())) {
+
+        if (!request.password().equals(request.confirmPassword())) {
             return ResponseEntity.badRequest().body("Les mots de passe ne correspondent pas");
         }
 
-        if(userRepository.findByEmail(request.Email()) != null) {
+        if (userRepository.findByEmail(request.email()) != null) {
             return ResponseEntity.badRequest().body("Email déjà utilisé");
         }
 
         User user = new User();
 
-        user.setEmail(request.Email());
-        user.setPassword(passwordEncoder.encode(request.Password()));
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
 
         return ResponseEntity.ok(userRepository.save(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
+    public ResponseEntity<?> login(@RequestBody User user) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-            if(authentication.isAuthenticated()) {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getEmail(),
+                            user.getPassword()
+                    )
+            );
+
+            if (authentication.isAuthenticated()) {
+                User authenticatedUser = userRepository.findByEmail(user.getEmail());
+
                 Map<String, Object> authData = new HashMap<>();
-                authData.put("token", jwtUtils.generateToken(user.getEmail()));
-                authData.put("type", "bearor");
+
+                authData.put(
+                        "token",
+                        jwtUtils.generateToken(authenticatedUser.getEmail())
+                );
+
+                authData.put("firstName", authenticatedUser.getFirstName());
+                authData.put("lastName", authenticatedUser.getLastName());
+                authData.put("email", authenticatedUser.getEmail());
+                authData.put("type", "Bearer");
+
                 return ResponseEntity.ok(authData);
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
+
         } catch (AuthenticationException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
         }
     }
-
 }

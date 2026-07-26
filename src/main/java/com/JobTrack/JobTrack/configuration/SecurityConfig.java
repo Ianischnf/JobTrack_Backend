@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.PostMapping;
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class SecurityConfig {
     private final CustomUserIDetailsService customUserIDetailsService;
     private final JwtUtils jwtUtils;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -38,14 +40,22 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/*").permitAll()
-                                .requestMatchers("/api/candidacy", "/api/candidacy/**").permitAll()
-                                .anyRequest().authenticated())
-               // .addFilterBefore(new JwtFilter(customUserIDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/candidacy/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(
+                        new JwtFilter(customUserIDetailsService, jwtUtils),
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .build();
     }
 

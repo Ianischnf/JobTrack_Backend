@@ -8,7 +8,8 @@ import java.time.LocalDate;
 public record CandidacyRequestDTO(
         String company,
         String jobTitle,
-        LocalDate dateCandidacy
-
+        LocalDate dateCandidacy,
+        String webSite,
+        CandidacyStatus status
 ) {
 }

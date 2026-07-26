@@ -27,7 +27,8 @@ public class CandidacyServiceImpl implements CandidacyService{
         candidacy.setCompany(request.company());
         candidacy.setJobTitle(request.jobTitle());
         candidacy.setDateCandidacy(request.dateCandidacy());
-        candidacy.setStatus(CandidacyStatus.ENVOYEE);
+        candidacy.setWebSite(request.webSite());
+        candidacy.setStatus(request.status());
 
         Candidacy saved = candidacyRepository.save(candidacy);
 
@@ -36,6 +37,7 @@ public class CandidacyServiceImpl implements CandidacyService{
                 saved.getCompany(),
                 saved.getJobTitle(),
                 saved.getDateCandidacy(),
+                saved.getWebSite(),
                 saved.getStatus()
         );
     }
@@ -50,6 +52,7 @@ public class CandidacyServiceImpl implements CandidacyService{
                         candidacy.getCompany(),
                         candidacy.getJobTitle(),
                         candidacy.getDateCandidacy(),
+                        candidacy.getWebSite(),
                         candidacy.getStatus()
                 )).toList();
        /* List<Candidacy> candidacies = candidacyRepository.findAll();
@@ -77,6 +80,7 @@ public class CandidacyServiceImpl implements CandidacyService{
                 candidacy.getCompany(),
                 candidacy.getJobTitle(),
                 candidacy.getDateCandidacy(),
+                candidacy.getWebSite(),
                 candidacy.getStatus()
         );
     }
@@ -89,6 +93,7 @@ public class CandidacyServiceImpl implements CandidacyService{
        candidacy.setCompany(candidacyUpdateDTO.company());
        candidacy.setJobTitle(candidacyUpdateDTO.jobTitle());
        candidacy.setDateCandidacy(candidacyUpdateDTO.dateCandidacy());
+       candidacy.setWebSite(candidacyUpdateDTO.webSite());
        candidacy.setStatus(candidacyUpdateDTO.status());
 
        Candidacy updated =  candidacyRepository.save(candidacy);
@@ -98,6 +103,7 @@ public class CandidacyServiceImpl implements CandidacyService{
                updated.getCompany(),
                updated.getJobTitle(),
                updated.getDateCandidacy(),
+               updated.getWebSite(),
                updated.getStatus()
        );
     }

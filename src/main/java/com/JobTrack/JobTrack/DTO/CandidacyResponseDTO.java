@@ -9,6 +9,7 @@ public record CandidacyResponseDTO(
         String company,
         String jobTitle,
         LocalDate dateCandidacy,
+        String webSite,
         CandidacyStatus status
 ) {
 }

@@ -20,6 +20,7 @@ public class Candidacy {
     private String company;
     private String jobTitle;
     private LocalDate dateCandidacy;
+    private String webSite;
 
     @Enumerated(EnumType.STRING)
     private CandidacyStatus  status;
