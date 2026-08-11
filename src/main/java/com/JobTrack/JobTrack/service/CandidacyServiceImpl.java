@@ -29,10 +29,9 @@ public class CandidacyServiceImpl implements CandidacyService{
     public CandidacyResponseDTO saveCandidacy(CandidacyRequestDTO request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        Candidacy candidacy = new Candidacy();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Utilisateur connecté introuvable"));
-
+        Candidacy candidacy = new Candidacy();
 
         candidacy.setCompany(request.company());
         candidacy.setJobTitle(request.jobTitle());

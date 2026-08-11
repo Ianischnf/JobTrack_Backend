@@ -6,6 +6,8 @@ import com.JobTrack.JobTrack.DTO.UserResponseDTO;
 import com.JobTrack.JobTrack.entity.User;
 import com.JobTrack.JobTrack.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -34,6 +36,22 @@ public class UserServiceImpl implements UserService{
         user.setLastName(userRequestDTO.lastName());
         user.setFirstName(user.getFirstName());
         user.setEmail(userRequestDTO.email());
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getLastName(),
+                user.getFirstName(),
+                user.getEmail()
+        );
+    }
+
+    @Override
+    public UserResponseDTO fetchCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
 
         return new UserResponseDTO(
                 user.getId(),
