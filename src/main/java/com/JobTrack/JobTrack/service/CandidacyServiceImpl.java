@@ -5,30 +5,41 @@ import com.JobTrack.JobTrack.DTO.CandidacyResponseDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyUpdateDTO;
 import com.JobTrack.JobTrack.DTO.CandidacyUpdatedDTO;
 import com.JobTrack.JobTrack.entity.Candidacy;
+import com.JobTrack.JobTrack.entity.User;
 import com.JobTrack.JobTrack.enums.CandidacyStatus;
 import com.JobTrack.JobTrack.repository.CandidacyRepository;
+import com.JobTrack.JobTrack.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RequiredArgsConstructor
 @Service
 public class CandidacyServiceImpl implements CandidacyService{
 
     private final CandidacyRepository candidacyRepository;
+    private final UserRepository userRepository;
 
 
     @Override
     public CandidacyResponseDTO saveCandidacy(CandidacyRequestDTO request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         Candidacy candidacy = new Candidacy();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur connecté introuvable"));
+
 
         candidacy.setCompany(request.company());
         candidacy.setJobTitle(request.jobTitle());
         candidacy.setDateCandidacy(request.dateCandidacy());
         candidacy.setWebSite(request.webSite());
         candidacy.setStatus(request.status());
+        candidacy.setUser(user);
 
         Candidacy saved = candidacyRepository.save(candidacy);
 

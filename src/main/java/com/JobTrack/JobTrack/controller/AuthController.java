@@ -43,7 +43,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Les mots de passe ne correspondent pas");
         }
 
-        if (userRepository.findByEmail(request.email()) != null) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
             return ResponseEntity.badRequest().body("Email déjà utilisé");
         }
 
@@ -68,7 +68,8 @@ public class AuthController {
             );
 
             if (authentication.isAuthenticated()) {
-                User authenticatedUser = userRepository.findByEmail(user.getEmail());
+                User authenticatedUser = userRepository.findByEmail(user.getEmail())
+                        .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
                 Map<String, Object> authData = new HashMap<>();
 

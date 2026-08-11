@@ -24,4 +24,8 @@ public class Candidacy {
 
     @Enumerated(EnumType.STRING)
     private CandidacyStatus  status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
