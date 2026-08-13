@@ -30,18 +30,23 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
         user.setLastName(userRequestDTO.lastName());
         user.setFirstName(user.getFirstName());
         user.setEmail(userRequestDTO.email());
 
+        User UpdatedUser = userRepository.save(user);
+
         return new UserResponseDTO(
-                user.getId(),
-                user.getLastName(),
-                user.getFirstName(),
-                user.getEmail()
+                UpdatedUser.getId(),
+                UpdatedUser.getLastName(),
+                UpdatedUser.getFirstName(),
+                UpdatedUser.getEmail()
         );
     }
 

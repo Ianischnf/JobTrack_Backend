@@ -20,11 +20,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponseDTO updateUser(@Valid @RequestBody UserRequestDTO userRequestDTO, @PathVariable("id") Long id){
-        return this.userService.updateUser(id, userRequestDTO);
+    public UserResponseDTO updateUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+        return this.userService.updateUser(userRequestDTO);
     }
 
-    @PutMapping("/me")
+    @GetMapping("/me")
     public UserResponseDTO fetchCurrentUser(){
         return this.userService.fetchCurrentUser();
     }

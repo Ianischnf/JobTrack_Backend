@@ -7,7 +7,7 @@ import com.JobTrack.JobTrack.entity.User;
 public interface UserService {
 
     public UserResponseDTO FetchUserById(Long id);
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO);
+    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO);
     public UserResponseDTO fetchCurrentUser();
     public void deleteUser(Long id);
 }
