@@ -42,4 +42,9 @@ public class CandidacyController {
     public void deleteCandidacy(@PathVariable("id") Long id){
         this.candidacyService.DeleteCandidacy(id);
     }
+
+    @DeleteMapping("/all")
+    public void deleteAllCandidacy(){
+        this.candidacyService.DeleteAllCandidacy();
+    }
 }

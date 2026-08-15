@@ -9,6 +9,7 @@ import com.JobTrack.JobTrack.entity.User;
 import com.JobTrack.JobTrack.enums.CandidacyStatus;
 import com.JobTrack.JobTrack.repository.CandidacyRepository;
 import com.JobTrack.JobTrack.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -122,4 +123,20 @@ public class CandidacyServiceImpl implements CandidacyService{
     public void DeleteCandidacy(Long id) {
         candidacyRepository.deleteById(id);
     }
+
+    @Override
+    @Transactional
+    public void DeleteAllCandidacy() {
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         String email = authentication.getName();
+
+         User user = userRepository.findByEmail(email)
+                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+
+         candidacyRepository.deleteAllByUser(user);
+
+    }
+
+
 }

@@ -14,4 +14,5 @@ public interface CandidacyService {
     public CandidacyResponseDTO fetchCandidacyById(Long id);
     public CandidacyUpdatedDTO updateCandidacy(CandidacyUpdateDTO candidacyUpdateDTO, Long id);
     public void DeleteCandidacy(Long id);
+    public void DeleteAllCandidacy();
 }
